@@ -13,7 +13,7 @@
     "android:apk": "npm run android:sync && cd android && ./gradlew assembleDebug"
   },
   "devDependencies": {
-    "@capacitor/cli": "^6.1.2"
+    "@capacitor/cli": "^8.5.2"
   },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
