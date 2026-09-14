@@ -1,0 +1,10 @@
+{
+	"folders": [
+		{
+			"path": "tx-law-app"
+		}
+	],
+	"settings": {
+		"claudeCodeChat.permissions.yoloMode": true
+	}
+}

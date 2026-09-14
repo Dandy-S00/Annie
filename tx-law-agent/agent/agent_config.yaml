@@ -1,0 +1,54 @@
+name: tx-law-research-agent
+description: >
+  Retrieval + comparison research agent for Texas defendants — grounds
+  every answer in retrieved statutes and comparable case outcomes, and
+  helps the user find a matched attorney.
+
+model:
+  deployment: ${FOUNDRY_MODEL_DEPLOYMENT}
+  temperature: 0.1          # low temperature — this is a grounding task, not a creative one
+
+instructions_file: ./instructions.md
+
+tools:
+  - type: azure_ai_search
+    name: statutes_search
+    index: ${AZURE_SEARCH_STATUTES_INDEX}
+    description: >
+      Search Texas statute text by keyword/section. Returns statute
+      section, citation, and full text.
+
+  - type: function
+    name: outcome_comparison
+    module: tools.outcome_comparison
+    entrypoint: compare_outcomes
+    description: >
+      Given a case type, county, statute(s) involved, and key facts,
+      retrieves the most similar prior cases from the outcomes index and
+      returns their actual dispositions plus match-quality metadata. This
+      is the ONLY approved source for "what usually happens" answers.
+
+  - type: function
+    name: docket_lookup
+    module: tools.docket_lookup
+    entrypoint: lookup_case
+    description: >
+      Live, per-case lookup of a specific docket's public status in a
+      given county. Rate-limited. Not for bulk retrieval.
+
+  - type: function
+    name: attorney_finder
+    module: tools.attorney_finder
+    entrypoint: find_attorneys
+    description: >
+      Looks up Texas attorneys by practice area and county from the State
+      Bar directory. Returns name, bar number, practice areas, and contact
+      info where available. Does not rank by outcome — no such data exists
+      per-attorney.
+
+evaluation:
+  # Run the Agent Inspector locally against a held-out set of fact
+  # patterns before deploying — check that every outcome claim in the
+  # transcript cites a retrieved case, and that "not enough data" responses
+  # occur when the comparison set is genuinely thin.
+  trace: true

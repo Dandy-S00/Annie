@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+// Creates www/index.html from a template so the build stamp can be injected.
+import { writeFile, mkdir } from "node:fs/promises";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const www = dirname(fileURLToPath(import.meta.url)) + "/../www";
+await mkdir(www, { recursive: true });
+
+const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="utf-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5" />
+ <meta name="theme-color" content="#0b1220" />
+ <meta name="description" content="Plain-language help for people facing a Texas case: what the law says, what happened in similar real cases, and how to reach a DFW attorney." />
+ <meta name="color-scheme" content="dark" />
+ <title>Texas Law Guide</title>
+ <link rel="manifest" href="./manifest.webmanifest" />
+ <link rel="icon" href="./icons/icon-192.png" />
+ <link rel="apple-touch-icon" href="./icons/icon-192.png" />
+ <link rel="stylesheet" href="./styles.css?b=__BUILD__" />
+</head>
+<body>
+ <header class="appbar">
+    <div>
+      <span class="brand" id="title">Texas Law Guide</span>
+      <span class="sub" id="subtitle">Plain-language help for Texas cases</span>
+    </div>
+ </header>
+
+ <main class="screen active" id="main"></main>
+
+ <nav class="tabbar" id="tabbar" aria-label="Main navigation"></nav>
+
+ <script type="module" src="./js/app.js?b=__BUILD__"></script>
+</body>
+</html>
+`;
+
+await writeFile(join(www, "index.html"), html, "utf8");
+console.log("wrote www/index.html");

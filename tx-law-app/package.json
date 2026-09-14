@@ -1,0 +1,22 @@
+{
+  "name": "tx-law-guide",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Plain-language Texas legal orientation app for defendants — what the law says, what happened in similar cases, and how to reach a DFW attorney.",
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/copy-web.mjs",
+    "serve": "npx --yes http-server www -p 4599 -c-1",
+    "android:add": "npx cap add android",
+    "android:sync": "npm run build && npx cap sync android",
+    "android:open": "npx cap open android",
+    "android:apk": "npm run android:sync && cd android && ./gradlew assembleDebug"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  }
+}

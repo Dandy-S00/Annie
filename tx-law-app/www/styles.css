@@ -1,0 +1,587 @@
+:root {
+  --bg: #0b1220;
+  --panel: #131c2e;
+  --panel-2: #1b2540;
+  --line: #26324f;
+  --text: #eaf0ff;
+  --muted: #9fb0d0;
+  --accent: #4f8cff;
+  --accent-2: #7aa7ff;
+  --good: #2fbf71;
+  --good-bg: #123324;
+  --warn: #f0b429;
+  --warn-bg: #3a2c0a;
+  --bad: #ff6b6b;
+  --bad-bg: #3a1414;
+  --neutral: #8ea2c9;
+  --neutral-bg: #1d2740;
+  --radius: 14px;
+  --tabbar-h: 68px;
+}
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+  overscroll-behavior-y: none;
+  /* Safety net: a single over-wide child must never make the app horizontally
+     scrollable on a phone. Individual offenders should still be fixed. */
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Nothing should ever be wider than its container. */
+img,
+table,
+pre,
+.mono {
+  max-width: 100%;
+}
+
+body {
+  /* Room so the fixed bottom tab bar never covers the last card. */
+  padding-bottom: calc(
+    var(--tabbar-h) + env(safe-area-inset-bottom, 0px) + 16px
+  );
+}
+
+/*
+ * Centering lives on the content wrapper rather than on <body>. A transform on
+ * <body> (which the tab bar would need to center itself) turns <body> into the
+ * containing block for position:fixed children, which makes the tab bar scroll
+ * with the page instead of staying pinned. Keeping <body> transform-free and
+ * centering the .appbar/.screen/.tabbar children by max-width + auto margins
+ * avoids that trap.
+ */
+.appbar,
+.screen,
+.tabbar {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1 {
+  font-size: 1.5rem;
+  line-height: 1.25;
+  margin: 0 0 4px;
+}
+h2 {
+  font-size: 1.18rem;
+  line-height: 1.3;
+  margin: 22px 0 10px;
+}
+h3 {
+  font-size: 1rem;
+  margin: 16px 0 6px;
+}
+p {
+  margin: 0 0 12px;
+}
+a {
+  color: var(--accent-2);
+}
+
+/* ---------- layout ---------- */
+.appbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  /* Sticky + auto margins would cancel the centering, so pin the width. */
+  width: 100%;
+  background: rgba(11, 18, 32, 0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+  padding: calc(env(safe-area-inset-top, 0px) + 12px) 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.appbar .brand {
+  font-weight: 700;
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+.appbar .sub {
+  font-size: 0.74rem;
+  color: var(--muted);
+  display: block;
+  font-weight: 400;
+}
+
+.screen {
+  padding: 16px;
+  display: none;
+  animation: fade 0.16s ease-out;
+}
+.screen.active {
+  display: block;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- cards ---------- */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 15px;
+  margin-bottom: 13px;
+  /* Cards hold tables and long strings; keep them from stretching the page. */
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.card.tight {
+  padding: 12px;
+}
+.card h3 {
+  margin-top: 0;
+}
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
+.card-head > * {
+  min-width: 0;
+}
+
+.pill {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--muted);
+  white-space: nowrap;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+.pill.good {
+  background: var(--good-bg);
+  color: var(--good);
+  border-color: #1d5138;
+}
+.pill.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-color: #5c4610;
+}
+.pill.bad {
+  background: var(--bad-bg);
+  color: var(--bad);
+  border-color: #5c2020;
+}
+.pill.neutral {
+  background: var(--neutral-bg);
+  color: var(--neutral);
+}
+.pill.accent {
+  background: #16294d;
+  color: var(--accent-2);
+  border-color: #24406e;
+}
+
+.meta {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.label {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 700;
+  margin-bottom: 3px;
+}
+
+/* ---------- buttons ---------- */
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+}
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  color: var(--text);
+  font-weight: 600;
+  text-align: left;
+  margin-bottom: 10px;
+  transition:
+    transform 0.08s ease,
+    border-color 0.15s ease;
+}
+.btn:active {
+  transform: scale(0.985);
+}
+.btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #071021;
+}
+.btn.ghost {
+  background: transparent;
+}
+.btn .hint {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-top: 3px;
+}
+.btn.primary .hint {
+  color: #10203a;
+}
+.btn-row {
+  display: flex;
+  gap: 10px;
+}
+.btn-row .btn {
+  margin-bottom: 0;
+}
+
+input,
+select,
+textarea {
+  width: 100%;
+  font-family: inherit;
+  font-size: 1rem;
+  padding: 12px;
+  border-radius: 11px;
+  border: 1px solid var(--line);
+  background: #0e1729;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+textarea {
+  min-height: 96px;
+  resize: vertical;
+}
+label.field {
+  display: block;
+}
+label.field span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+/* ---------- disclaimer ---------- */
+.disclaimer {
+  background: var(--warn-bg);
+  border: 1px solid #5c4610;
+  border-radius: var(--radius);
+  padding: 13px;
+  font-size: 0.9rem;
+  margin-bottom: 14px;
+}
+.disclaimer strong {
+  color: var(--warn);
+}
+.disclaimer.calm {
+  background: #16294d;
+  border-color: #24406e;
+}
+.disclaimer.calm strong {
+  color: var(--accent-2);
+}
+.disclaimer.danger {
+  background: var(--bad-bg);
+  border-color: #5c2020;
+}
+.disclaimer.danger strong {
+  color: var(--bad);
+}
+
+/* ---------- bars ---------- */
+.bar-row {
+  margin-bottom: 10px;
+}
+.bar-label {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+.bar-track {
+  height: 10px;
+  background: #0e1729;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 999px;
+}
+.bar-fill.good {
+  background: var(--good);
+}
+.bar-fill.bad {
+  background: var(--bad);
+}
+.bar-fill.neutral {
+  background: var(--neutral);
+}
+
+/* ---------- lists ---------- */
+ul.plain {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+ul.plain li {
+  padding: 9px 0 9px 26px;
+  position: relative;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.93rem;
+}
+ul.plain li:last-child {
+  border-bottom: none;
+}
+ul.plain li::before {
+  content: "\2022";
+  position: absolute;
+  left: 8px;
+  color: var(--accent);
+  font-weight: 700;
+}
+ul.check li::before {
+  content: "\2713";
+  color: var(--good);
+}
+ul.q li::before {
+  content: "?";
+  color: var(--warn);
+  font-weight: 700;
+}
+
+/* ---------- tabs ---------- */
+.tabbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* No transform here: it would anchor this fixed element to a transformed
+     ancestor instead of the viewport. Horizontal centering comes from the
+     max-width + auto-margin rule shared with .appbar and .screen above. */
+  height: calc(var(--tabbar-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: rgba(19, 28, 46, 0.97);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  z-index: 30;
+}
+.tabbar button {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 2px;
+}
+.tabbar button .ico {
+  font-size: 1.28rem;
+  line-height: 1;
+}
+.tabbar button.active {
+  color: var(--accent-2);
+}
+.tabbar button.active .ico {
+  transform: translateY(-1px);
+}
+
+/* ---------- misc ---------- */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+  vertical-align: middle;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.row-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+.stack > * + * {
+  margin-top: 8px;
+}
+.hr {
+  height: 1px;
+  background: var(--line);
+  margin: 14px 0;
+}
+.small {
+  font-size: 0.82rem;
+}
+.muted {
+  color: var(--muted);
+}
+.mono {
+  font-family:
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  font-size: 0.85rem;
+  /* Citations and email addresses are long unbroken strings. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.center {
+  text-align: center;
+}
+
+details {
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  background: var(--panel-2);
+  /* `<details>` is the container our over-wide tables actually overflowed, so
+     it needs both a shrinkable min-width and its own scroll escape hatch. */
+  min-width: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+details summary {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.94rem;
+}
+details[open] summary {
+  margin-bottom: 8px;
+}
+
+.badge-score {
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1;
+}
+.scroll-x {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+table.mini {
+  width: 100%;
+  /*
+   * table-layout:fixed is what keeps this inside a phone viewport. With the
+   * default auto layout the browser sizes columns from their content and a
+   * two-column table of long sentences computes a min-width wider than the
+   * screen (measured: 416px inside a 412px viewport), which clips the right
+   * column. Fixed layout distributes the available width instead.
+   */
+  table-layout: fixed;
+  border-collapse: collapse;
+  font-size: 0.84rem;
+}
+table.mini th,
+table.mini td {
+  text-align: left;
+  padding: 7px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+  /* Long words, citations and bar numbers must wrap rather than widen. */
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  white-space: normal;
+}
+table.mini th:first-child,
+table.mini td:first-child {
+  /* Give the label column a stable share so rows line up. */
+  width: 38%;
+}
+table.mini th {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.toast {
+  position: fixed;
+  bottom: calc(var(--tabbar-h) + 18px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 11px 16px;
+  border-radius: 999px;
+  font-size: 0.86rem;
+  z-index: 50;
+  box-shadow: 0 8px 26px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  text-align: center;
+}
+.toast.good {
+  border-color: #1d5138;
+}
+.toast.bad {
+  border-color: #5c2020;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
