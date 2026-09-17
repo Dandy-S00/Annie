@@ -1,0 +1,12 @@
+.git
+.github
+.env
+.env.*
+!.env.example
+node_modules
+.DS_Store
+*.zip
+*.log
+**/node_modules
+**/android
+**/ios
